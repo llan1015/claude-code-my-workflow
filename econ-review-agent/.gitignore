@@ -1,0 +1,6 @@
+usage_ledger.json
+review_*.json
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/

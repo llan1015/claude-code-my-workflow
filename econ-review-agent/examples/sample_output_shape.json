@@ -1,0 +1,63 @@
+{
+  "_note": "Illustrative output shape (hand-written, abridged). Real output comes from the API and validates against econ_review/schema.py::PaperReview. This '_note' key does not appear in real output.",
+  "research_question": "Does a higher minimum wage reduce teen employment?",
+  "causal_claim": "Elasticity of teen employment with respect to the minimum wage, identified from cross-border policy differences (ATT among border counties).",
+  "data": {
+    "design_type": "panel",
+    "unit_of_observation": "county-quarter",
+    "time_dimension": "1994Q1-2019Q4, quarterly",
+    "data_sources": ["Quarterly Workforce Indicators (QWI)", "state legislative records"],
+    "sample_description": "1,181 contiguous county pairs straddling state borders with positive teen employment in every quarter."
+  },
+  "identification": {
+    "method": "difference-in-differences",
+    "source_of_variation": "Cross-border differences in the binding state minimum wage within contiguous county pairs, with staggered and repeated state-level changes.",
+    "description": "Pair-by-quarter fixed effects absorb shocks common to both counties in a border pair; county fixed effects absorb time-invariant heterogeneity.",
+    "estimating_equation": "ln(E_ipt) = alpha + beta ln(MW_it) + gamma_i + delta_pt + X_it theta + e_ipt"
+  },
+  "key_assumptions": [
+    {
+      "assumption": "Within a border pair, counties would have followed parallel employment trends absent minimum wage differences.",
+      "stated_explicitly_by_authors": false,
+      "testability": "partially testable (diagnostics exist)",
+      "suggested_diagnostic": "Event-study pre-trends around large (>5%) increases; placebo laws."
+    },
+    {
+      "assumption": "No cross-border spillovers (SUTVA): the control county's employment is unaffected by the neighbor's minimum wage.",
+      "stated_explicitly_by_authors": false,
+      "testability": "partially testable (diagnostics exist)",
+      "suggested_diagnostic": "Re-estimate dropping pairs with high LODES commuting flows; compare near- vs far-border establishments."
+    }
+  ],
+  "endogeneity_concerns": [
+    {
+      "concern": "Minimum wage legislation timing may respond to local labor-market conditions that differ across the border.",
+      "channel": "reverse causality",
+      "severity": "major",
+      "suggested_fix": "Event-study plots around enactment; control for leads of the policy."
+    },
+    {
+      "concern": "Staggered, continuous treatment with two-way fixed effects can yield negatively weighted comparisons.",
+      "channel": "other",
+      "severity": "major",
+      "suggested_fix": "Report estimators robust to staggered adoption (Callaway & Sant'Anna 2021; de Chaisemartin & D'Haultfoeuille 2020)."
+    }
+  ],
+  "referee_questions": [
+    {
+      "question": "Commuting zones routinely cross state borders: how much of the null-to-small effect reflects displaced jobs reappearing in the control county?",
+      "why_it_matters": "Spillovers bias beta toward zero mechanically, which is the paper's headline finding."
+    },
+    {
+      "question": "With continuous, repeated treatment, what does the TWFE beta aggregate, and do robust estimators agree?",
+      "why_it_matters": "Negative weights can change magnitude and even sign."
+    },
+    {
+      "question": "Is state-level clustering adequate with 1,181 pairs but far fewer treatment events?",
+      "why_it_matters": "Few effective clusters understate standard errors."
+    }
+  ],
+  "identification_credibility": 4,
+  "overall_assessment": "A credible border-pair design in the Dube-Lester-Reich tradition; the decisive threats are cross-border spillovers and staggered-adoption aggregation, both addressable with stated diagnostics.",
+  "limitations_of_this_review": "Only the abstract and design section were provided: results, robustness tables, and inference details could not be assessed."
+}
